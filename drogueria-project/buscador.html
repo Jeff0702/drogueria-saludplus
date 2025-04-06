@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador | Droguería SaludPlus</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <button onclick="window.location.href='index.html'">Inicio</button>
+        <button onclick="window.location.href='registro.html'">Registro</button>
+        <button onclick="window.location.href='productos.html'">Productos</button>
+        <button onclick="window.location.href='buscador.html'">Buscador</button>
+    </nav>
+    <div class="container">
+        <h1>Buscador de Productos</h1>
+        
+        <div class="filtros">
+            <input type="text" id="buscarNombre" placeholder="Nombre del producto">
+            <select id="filtroCategoria">
+                <option value="">Todas las categorías</option>
+                <option value="medicamento">Medicamento</option>
+                <option value="cosmetico">Cosmético</option>
+                <option value="cosmetico">Suplemento</option>
+            </select>
+            <input type="number" id="precioMax" placeholder="Precio máximo">
+            
+            <div class="buttons">
+                <button id="btnBuscar" class="btn-primary">Buscar</button>
+                <button id="btnLimpiar" class="btn-secondary">Limpiar</button>
+            </div>
+        </div>
+
+        <div id="resultados" class="result-table"></div>
+        <button onclick="window.location.href='productos.html'" class="btn-back">Volver a Productos</button>
+    </div>
+    <footer>
+        <p>© 2025 Droguería SaludPlus. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script src="/js/productos.js"></script>
+</body>
+</html>

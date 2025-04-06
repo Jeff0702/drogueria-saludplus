@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Productos | Droguería SaludPlus</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <button onclick="window.location.href='index.html'">Inicio</button>
+        <button onclick="window.location.href='registro.html'">Registro</button>
+        <button onclick="window.location.href='productos.html'">Productos</button>
+        <button onclick="window.location.href='buscador.html'">Buscador</button>
+    </nav>
+    <div class="container">
+        <h1>Registro de Productos</h1>
+        <p>Complete el formulario para agregar un nuevo producto al inventario.</p>
+        
+        <form id="formRegistro">
+            <label for="nombre">Nombre del Producto:</label>
+            <input type="text" id="nombre" required>
+
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" required>
+                <option value="medicamento">Medicamento</option>
+                <option value="cosmetico">Cosmético</option>
+                <option value="suplemento">Suplemento</option>
+            </select>
+
+            <label for="imagen">Imagen (URL):</label>
+            <input type="text" id="imagen" placeholder="https://ejemplo.com/imagen.jpg">
+
+            <label for="codigo">Código de Producto:</label>
+            <input type="text" id="codigo" required>
+
+            <label for="precio">Precio ($):</label>
+            <input type="number" id="precio" step="0.01" required>
+
+            <!-- Atributos adicionales -->
+            <label for="laboratorio">Laboratorio:</label>
+            <input type="text" id="laboratorio">
+
+            <label for="stock">Stock Inicial:</label>
+            <input type="number" id="stock">
+
+            <label for="vencimiento">Fecha de Vencimiento:</label>
+            <input type="date" id="vencimiento">
+
+            <div class="buttons">
+                <button type="submit" class="btn-primary">Registrar</button>
+                <button type="reset" class="btn-secondary">Limpiar Campos</button>
+            </div>
+        </form>
+    </div>
+    <footer>
+        <p>© 2025 Droguería SaludPlus. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script src="/js/productos.js"></script>
+</body>
+</html>
