@@ -67,7 +67,18 @@ function mostrarResultados(resultados) {
 document.getElementById('formRegistro')?.addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const codigo = document.getElementById('codigo').value;
+    
+    // Validación del código (ejemplo: 3 letras + 4 números)
+    if (!/^[A-Z]{3}\d{4}$/.test(codigo)) {
+        alert("Código inválido. Debe tener 3 letras mayúsculas seguidas de 4 números (ej: ABC1234)");
+        window.location.href = "index.html#codigo-invalido";
+        return;
+    }
+    
+    // Resto del código para crear el producto...
     const nuevoProducto = {
+        codigo: codigo,
         nombre: document.getElementById('nombre').value,
         categoria: document.getElementById('categoria').value,
         imagen: document.getElementById('imagen').value || 'img/default.png',
@@ -77,7 +88,7 @@ document.getElementById('formRegistro')?.addEventListener('submit', function(e) 
         stock: parseInt(document.getElementById('stock').value) || 0,
         vencimiento: document.getElementById('vencimiento').value
     };
-
+    
     productos.push(nuevoProducto);
     guardarProductos();
     alert('Producto registrado con éxito!');
