@@ -272,7 +272,7 @@ footer {
   background: var(--primary);
   color: white;
   border-radius: 0; /* ← Esto lo deja rectangular */
-  width: 100%;
+  width: auto;
   position: relative;
   left: 0;
 }
