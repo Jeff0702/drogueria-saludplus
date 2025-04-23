@@ -15,7 +15,7 @@
 /* ===== ESTILOS GENERALES ===== */
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: var(--light-bg);
+  background-
   color: var(--dark-text);
   line-height: 1.6;
   margin: 0;
@@ -167,20 +167,24 @@ input:focus, select:focus {
 /* ===== BOTONES ===== */
 .boton-container {
   margin-top: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 .btn-primary {
-  display: inline-block;
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-  margin-top: 0.5rem;
+  background: #0066cc;
+  color: var(--light-bg);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 0.5rem;
 }
 
 .btn-primary:hover {
   background: #0052a3;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
@@ -273,7 +277,7 @@ footer {
   color: white;
   border-radius: 0; /* ← Esto lo deja rectangular */
   width: auto;
-  position: relative;
+  position: static;
   left: 0;
 }
 
