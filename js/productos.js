@@ -27,7 +27,7 @@ function mostrarProductos(pagina = 1) {
                 <div class="product-info">
                     <h3>${producto.nombre}</h3>
                     <p>Código: ${producto.codigo}</p>
-                    <p>Precio: $${producto.precio.toFixed(2)}</p>
+                    <p>Precio: $${producto.precio}</p>
                     <p>Categoría: ${producto.categoria}</p>
                     <div class="product-actions">
                         <button class="btn-edit">✏️ Editar</button>
@@ -39,7 +39,12 @@ function mostrarProductos(pagina = 1) {
     });
 
     document.getElementById('listaProductos').innerHTML = html;
-    document.getElementById('currentPage').textContent = `Página ${pagina}`;
+
+    // Actualizar controles de paginación
+    const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+    document.getElementById('currentPage').textContent = `Página ${pagina} de ${totalPaginas}`;
+    document.getElementById('nextPage').disabled = pagina >= totalPaginas;
+    document.getElementById('prevPage').disabled = pagina <= 1;
 }
 
 // Función para mostrar resultados de búsqueda en buscador.html
@@ -50,7 +55,7 @@ function mostrarResultados(resultados) {
             <tr>
                 <td><img src="${producto.imagen}" width="50"></td>
                 <td>${producto.nombre}</td>
-                <td>$${producto.precio.toFixed(2)}</td>
+                <td>$${producto.precio} COP</td>
                 <td>${producto.stock}</td>
             </tr>
         `;
@@ -76,15 +81,17 @@ document.getElementById('formRegistro')?.addEventListener('submit', function(e) 
         return;
     }
     
-    
+    // Formatear el precio con puntos de miles
+    const precioInput = document.getElementById('precio').value;
+    const precioFormateado = parseFloat(precioInput).toLocaleString('es-CO');
+
     // Resto del código para crear el producto...
     const nuevoProducto = {
         codigo: codigo,
         nombre: document.getElementById('nombre').value,
         categoria: document.getElementById('categoria').value,
         imagen: document.getElementById('imagen').value || 'img/default.png',
-        codigo: document.getElementById('codigo').value,
-        precio: parseFloat(document.getElementById('precio').value),
+        precio: precioFormateado,
         laboratorio: document.getElementById('laboratorio').value,
         stock: parseInt(document.getElementById('stock').value) || 0,
         vencimiento: document.getElementById('vencimiento').value
@@ -191,7 +198,25 @@ function abrirModalEdicion() {
                     <option value="medicamento" ${productoEditando.categoria === 'medicamento' ? 'selected' : ''}>Medicamento</option>
                     <option value="cosmetico" ${productoEditando.categoria === 'cosmetico' ? 'selected' : ''}>Cosmético</option>
                     <option value="suplemento" ${productoEditando.categoria === 'suplemento' ? 'selected' : ''}>Suplemento</option>
+                    <option value="Cuidado Personal" ${productoEditando.categoria === 'Cuidado Personal' ? 'selected' : ''}>Cuidado Personal</option>
+                    <option value="Equipos Medicos Basicos" ${productoEditando.categoria === 'Equipos Medicos Basicos' ? 'selected' : ''}>Equipos Medicos Basicos</option>
+                    
                 </select>
+                
+                <label for="edit-imagen">Imagen (URL):</label>
+                <input type="text" id="edit-imagen" value="${productoEditando.imagen}">
+                
+                <label for="edit-precio">Precio:</label>
+                <input type="text" id="edit-precio" value="${productoEditando.precio}" required>
+                
+                <label for="edit-laboratorio">Laboratorio:</label>
+                <input type="text" id="edit-laboratorio" value="${productoEditando.laboratorio}">
+                
+                <label for="edit-stock">Stock:</label>
+                <input type="number" id="edit-stock" value="${productoEditando.stock}">
+                
+                <label for="edit-vencimiento">Fecha de Vencimiento:</label>
+                <input type="date" id="edit-vencimiento" value="${productoEditando.vencimiento}">
                 
                 <div class="buttons">
                     <button type="submit" class="btn-primary">Guardar Cambios</button>
@@ -210,7 +235,11 @@ function abrirModalEdicion() {
         
         productoEditando.nombre = document.getElementById('edit-nombre').value;
         productoEditando.categoria = document.getElementById('edit-categoria').value;
-        // Añade más campos según necesites
+        productoEditando.imagen = document.getElementById('edit-imagen').value;
+        productoEditando.precio = document.getElementById('edit-precio').value;
+        productoEditando.laboratorio = document.getElementById('edit-laboratorio').value;
+        productoEditando.stock = parseInt(document.getElementById('edit-stock').value) || 0;
+        productoEditando.vencimiento = document.getElementById('edit-vencimiento').value;
         
         guardarProductos();
         mostrarProductos();
