@@ -70,11 +70,12 @@ document.getElementById('formRegistro')?.addEventListener('submit', function(e) 
     const codigo = document.getElementById('codigo').value;
     
     // Validación del código (ejemplo: 3 letras + 4 números)
-    if (!/^[A-Z]{3}\d{4}$/.test(codigo)) {
-        alert("Código inválido. Debe tener 3 letras mayúsculas seguidas de 4 números (ej: ABC1234)");
+    if (!/^(?=(?:.*\d){2,})(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(codigo)) {
+        alert("Código inválido. Debe tener mínimo 8 caracteres, al menos una letra minúscula, una mayúscula y dos números.");
         window.location.href = "index.html#codigo-invalido";
         return;
     }
+    
     
     // Resto del código para crear el producto...
     const nuevoProducto = {
