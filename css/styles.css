@@ -16,7 +16,7 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  background-color: var(--light-bg);
+  background-color: var(--white);
   color: var(--dark-text);
   line-height: 1.6;
   margin: 0;
@@ -30,7 +30,7 @@ body {
   margin: 2rem auto; /* Centrado */
   /* Mantener el resto de tus estilos originales */
   padding: 2rem;
-  background-color: lightgoldenrodyellow;
+  background-color: var(--white);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius);
 }
@@ -120,15 +120,15 @@ h1::after {
 
 /* ===== BARRA DE NAVEGACIÓN ===== */
 .navbar {
-  max-width: 1200px;
+  width: 100%; /* Ajustar al ancho completo de la página */
   margin: 0 auto 2rem auto; /* Centrado con margen inferior */
-  /* Mantener el resto de tus estilos originales */
   background: var(--primary);
   padding: 1rem 2rem;
   border-radius: var(--border-radius);
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  box-sizing: border-box; /* Incluir padding en el ancho total */
 }
 
 .navbar img{
