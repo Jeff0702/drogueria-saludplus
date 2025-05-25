@@ -1,7 +1,7 @@
 // ==============================================
 // 1. VARIABLES GLOBALES (Array y localStorage)
 // ==============================================
-let productos = JSON.parse(localStorage.getItem('productos')) || [];
+let productos = [];
 
 // ==============================================
 // 2. FUNCIONES PRINCIPALES
@@ -21,13 +21,18 @@ function mostrarProductos(pagina = 1) {
 
     let html = '';
     productosPagina.forEach(producto => {
+        // Asegurarnos que el precio sea número
+        const precio = typeof producto.precio === 'string' ?
+            parseFloat(producto.precio.replace(/[^0-9.-]+/g, "")) :
+            producto.precio;
+
         html += `
             <div class="product-card" data-id="${producto.codigo}">
                 <img src="${producto.imagen}" alt="${producto.nombre}" onerror="this.src='img/default.png'">
                 <div class="product-info">
                     <h3>${producto.nombre}</h3>
                     <p>Código: ${producto.codigo}</p>
-                    <p>Precio: $${producto.precio.toLocaleString('es-CO')}</p>
+                    <p>Precio: $${precio.toLocaleString('es-CO')}</p>
                     <p>Categoría: ${producto.categoria}</p>
                     <div class="product-actions">
                         <button class="btn-edit">✏️ Editar</button>
@@ -52,20 +57,561 @@ function mostrarProductos(pagina = 1) {
 
 // Función para mostrar resultados de búsqueda en buscador.html
 function mostrarResultados(resultados) {
-    let html = '<table><tr><th>Imagen</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>';
+    const contenedor = document.getElementById('resultados');
+    if (!contenedor) return;
+
+    if (resultados.length === 0) {
+        contenedor.innerHTML = '<p>No se encontraron productos.</p>';
+        return;
+    }
+
+    let html = '<table><tr><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr>';
     resultados.slice(0, 10).forEach(producto => {
+        const precio = typeof producto.precio === 'string' ?
+            parseFloat(producto.precio.replace(/[^0-9.-]+/g, "")) :
+            producto.precio;
+
         html += `
             <tr>
-                <td><img src="${producto.imagen}" width="50"></td>
+                <td><img src="${producto.imagen}" width="50" onerror="this.src='img/default.png'"></td>
                 <td>${producto.nombre}</td>
-                <td>$${producto.precio} COP</td>
-                <td>${producto.stock}</td>
+                <td>${producto.categoria}</td>
+                <td>$${precio.toLocaleString('es-CO')}</td>
+                <td>${producto.stock || 0}</td>
             </tr>
         `;
     });
     html += '</table>';
-    document.getElementById('resultados').innerHTML = html;
+    contenedor.innerHTML = html;
 }
+
+// Función para inicializar los productos
+function inicializarProductos() {
+    // Verificar si es la primera carga
+    if (!localStorage.getItem('productosInicializados')) {
+        // Definir productos iniciales
+        const productosIniciales = [
+            {
+        "codigo": "ACne1234",
+        "nombre": "Gel limpiador para acné",
+        "categoria": "Cuidado Personal",
+        "imagen": "img/gelAcne.jpg",
+        "precio": 18000,
+        "vencimiento": "2025-11-30",
+        "laboratorio": "Neutrogena",
+        "stock": 150
+    },
+    {
+        "codigo": "ALer5678",
+        "nombre": "Antialérgico Loratadina 10mg",
+        "categoria": "Medicamento",
+        "imagen": "img/loratadina.jpg",
+        "precio": 12000,
+        "vencimiento": "2026-03-15",
+        "laboratorio": "Genfar",
+        "stock": 200
+    },
+    {
+        "codigo": "BPro9101",
+        "nombre": "Protector solar FPS 50",
+        "categoria": "Cuidado Personal",
+        "imagen": "img/protectorSolar.jpg",
+        "precio": 35000,
+        "vencimiento": "2025-12-31",
+        "laboratorio": "Nivea",
+        "stock": 120
+    },
+    {
+        "codigo": "CCol2345",
+        "nombre": "Colirio lubricante",
+        "categoria": "Medicamento",
+        "imagen": "img/colirio.jpg",
+        "precio": 15000,
+        "vencimiento": "2025-09-30",
+        "laboratorio": "Alcon",
+        "stock": 180
+    },
+    {
+        "codigo": "DDol6789",
+        "nombre": "Dolofin 500mg",
+        "categoria": "Medicamento",
+        "imagen": "img/dolofin.jpg",
+        "precio": 8000,
+        "vencimiento": "2026-01-20",
+        "laboratorio": "MK",
+        "stock": 300
+    },
+    {
+        "codigo": "EHig3456",
+        "nombre": "Enjuague bucal menta",
+        "categoria": "Higiene Bucal",
+        "imagen": "img/enjuagueBucal.jpg",
+        "precio": 12500,
+        "vencimiento": "2025-10-15",
+        "laboratorio": "Listerine",
+        "stock": 160
+    },
+    {
+        "codigo": "FGas7890",
+        "nombre": "Antiácido tabletas",
+        "categoria": "Medicamento",
+        "imagen": "img/antiacido.jpg",
+        "precio": 9500,
+        "vencimiento": "2026-02-28",
+        "laboratorio": "Pepto-Bismol",
+        "stock": 220
+    },
+    {
+        "codigo": "GJab1234",
+        "nombre": "Jabón antibacterial",
+        "categoria": "Cuidado Personal",
+        "imagen": "img/jabonAntibacterial.jpg",
+        "precio": 6500,
+        "vencimiento": "2026-06-30",
+        "laboratorio": "Protex",
+        "stock": 250
+    },
+    {
+        "codigo": "HDes5678",
+        "nombre": "Desodorante roll-on",
+        "categoria": "Cuidado Personal",
+        "imagen": "img/desodorante.jpg",
+        "precio": 14000,
+        "vencimiento": "2025-12-15",
+        "laboratorio": "Rexona",
+        "stock": 190
+    },
+    {
+        "codigo": "ILax9101",
+        "nombre": "Laxante natural",
+        "categoria": "Medicamento",
+        "imagen": "img/laxante.jpg",
+        "precio": 11000,
+        "vencimiento": "2025-11-20",
+        "laboratorio": "Laxol",
+        "stock": 130
+    },
+    {
+        "codigo": "JMul2345",
+        "nombre": "Multivitamínico adulto",
+        "categoria": "Suplemento",
+        "imagen": "img/multivitaminico.jpg",
+        "precio": 28000,
+        "vencimiento": "2026-04-30",
+        "laboratorio": "Centrum",
+        "stock": 170
+    },
+    {
+        "codigo": "KCre6789",
+        "nombre": "Crema para hemorroides",
+        "categoria": "Medicamento",
+        "imagen": "img/cremaHemorroides.jpg",
+        "precio": 16500,
+        "vencimiento": "2025-10-31",
+        "laboratorio": "Preparation H",
+        "stock": 90
+    },
+    {
+        "codigo": "LMos3456",
+        "nombre": "Mosquitero repelente",
+        "categoria": "Cuidado Personal",
+        "imagen": "img/repelente.jpg",
+        "precio": 22000,
+        "vencimiento": "2026-05-15",
+        "laboratorio": "Off",
+        "stock": 110
+    },
+    {
+        "codigo": "NGas7890",
+        "nombre": "Gasas estériles",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/gasas.jpg",
+        "precio": 7500,
+        "vencimiento": "2027-01-31",
+        "laboratorio": "Curitas",
+        "stock": 200
+    },
+    {
+        "codigo": "OPar1234",
+        "nombre": "Paracetamol 500mg",
+        "categoria": "Medicamento",
+        "imagen": "img/paracetamol.jpg",
+        "precio": 6000,
+        "vencimiento": "2026-03-10",
+        "laboratorio": "Genfar",
+        "stock": 350
+    },
+    {
+        "codigo": "RAlg9101",
+        "nombre": "Algodón estéril",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/algodon.jpg",
+        "precio": 5000,
+        "vencimiento": "2027-02-28",
+        "laboratorio": "Johnson's",
+        "stock": 180
+    },
+    {
+        "codigo": "SGot2345",
+        "nombre": "Gotas para los oídos",
+        "categoria": "Medicamento",
+        "imagen": "img/gotasOidos.jpg",
+        "precio": 13500,
+        "vencimiento": "2025-11-15",
+        "laboratorio": "Otixal",
+        "stock": 120
+    },
+    {
+        "codigo": "TVit6789",
+        "nombre": "Vitamina D3 1000UI",
+        "categoria": "Suplemento",
+        "imagen": "img/vitaminaD.jpg",
+        "precio": 25000,
+        "vencimiento": "2026-07-31",
+        "laboratorio": "Nature's Bounty",
+        "stock": 140
+    },
+    {
+        "codigo": "UAnt3456",
+        "nombre": "Antiséptico yodado",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/antiseptico.jpg",
+        "precio": 9500,
+        "vencimiento": "2026-04-15",
+        "laboratorio": "Pervinox",
+        "stock": 160
+    },
+    {
+        "codigo": "VCre7890",
+        "nombre": "Crema para rozaduras",
+        "categoria": "Dermatológico",
+        "imagen": "img/cremaRozaduras.jpg",
+        "precio": 17500,
+        "vencimiento": "2025-10-30",
+        "laboratorio": "Bepanthen",
+        "stock": 100
+    },
+    {
+        "codigo": "WTij1234",
+        "nombre": "Tijeras médicas",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/tijeras.jpg",
+        "precio": 12000,
+        "vencimiento": "2028-12-31",
+        "laboratorio": "Hersill",
+        "stock": 60
+    },
+    {
+        "codigo": "XTer5678",
+        "nombre": "Tensiómetro digital",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/tensiometro.jpg",
+        "precio": 85000,
+        "vencimiento": "2027-06-30",
+        "laboratorio": "Omron",
+        "stock": 40
+    },
+    {
+        "codigo": "YMas9101",
+        "nombre": "Mascarillas quirúrgicas",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/mascarillas.jpg",
+        "precio": 15000,
+        "vencimiento": "2026-08-15",
+        "laboratorio": "3M",
+        "stock": 300
+    },
+    {
+        "codigo": "ZJar2345",
+        "nombre": "Jarabe para la gripe",
+        "categoria": "Medicamento",
+        "imagen": "img/jarabeGripe.jpg",
+        "precio": 19500,
+        "vencimiento": "2025-12-10",
+        "laboratorio": "Vick",
+        "stock": 170
+    },
+    {
+        "codigo": "AAci6789",
+        "nombre": "Aciclovir crema 5%",
+        "categoria": "Dermatológico",
+        "imagen": "img/aciclovir.jpg",
+        "precio": 22000,
+        "vencimiento": "2026-01-31",
+        "laboratorio": "Genfar",
+        "stock": 90
+    },
+    {
+        "codigo": "BBan3456",
+        "nombre": "Banda elástica",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/bandaElastica.jpg",
+        "precio": 8500,
+        "vencimiento": "2027-03-15",
+        "laboratorio": "Farmanova",
+        "stock": 120
+    },
+    {
+        "codigo": "CCur7890",
+        "nombre": "Curitas variedad",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/curitas.jpg",
+        "precio": 6500,
+        "vencimiento": "2026-11-30",
+        "laboratorio": "Band-Aid",
+        "stock": 200
+    },
+    {
+        "codigo": "DDig1234",
+        "nombre": "Digestivo natural",
+        "categoria": "Medicamento",
+        "imagen": "img/digestivo.jpg",
+        "precio": 12500,
+        "vencimiento": "2025-11-25",
+        "laboratorio": "Gaseodín",
+        "stock": 150
+    },
+    {
+        "codigo": "EEye5678",
+        "nombre": "Gotas para ojos rojos",
+        "categoria": "Medicamento",
+        "imagen": "img/gotasOjos.jpg",
+        "precio": 18500,
+        "vencimiento": "2026-02-15",
+        "laboratorio": "Systane",
+        "stock": 110
+    },
+    {
+        "codigo": "FFib9101",
+        "nombre": "Fibra soluble",
+        "categoria": "Suplemento",
+        "imagen": "img/fibra.jpg",
+        "precio": 21000,
+        "vencimiento": "2026-05-31",
+        "laboratorio": "Metamucil",
+        "stock": 95
+    },
+    {
+        "codigo": "GGlu2345",
+        "nombre": "Glucómetro digital",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/glucometro.jpg",
+        "precio": 95000,
+        "vencimiento": "2027-09-30",
+        "laboratorio": "Accu-Chek",
+        "stock": 35
+    },
+    {
+        "codigo": "HHem6789",
+        "nombre": "Hemostático en polvo",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/hemostatico.jpg",
+        "precio": 28000,
+        "vencimiento": "2026-07-15",
+        "laboratorio": "QuickClot",
+        "stock": 50
+    },
+    {
+        "codigo": "IIbu3456",
+        "nombre": "Ibuprofeno 400mg",
+        "categoria": "Medicamento",
+        "imagen": "img/ibuprofeno.jpg",
+        "precio": 7500,
+        "vencimiento": "2026-04-20",
+        "laboratorio": "Genfar",
+        "stock": 280
+    },
+    {
+        "codigo": "JJar7890",
+        "nombre": "Jarabe para la tos nocturna",
+        "categoria": "Medicamento",
+        "imagen": "img/jarabeTos.jpg",
+        "precio": 21000,
+        "vencimiento": "2025-12-05",
+        "laboratorio": "Robitussin",
+        "stock": 130
+    },
+    {
+        "codigo": "KKit1234",
+        "nombre": "Kit de primeros auxilios",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/kitPrimerosAuxilios.jpg",
+        "precio": 45000,
+        "vencimiento": "2027-01-15",
+        "laboratorio": "Red Cross",
+        "stock": 60
+    },
+    {
+        "codigo": "LLen5678",
+        "nombre": "Lentes de descanso",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/lentes.jpg",
+        "precio": 38000,
+        "vencimiento": "2026-10-31",
+        "laboratorio": "Optix",
+        "stock": 75
+    },
+    {
+        "codigo": "MMel9101",
+        "nombre": "Melatonina 5mg",
+        "categoria": "Suplemento",
+        "imagen": "img/melatonina.jpg",
+        "precio": 32000,
+        "vencimiento": "2026-08-20",
+        "laboratorio": "Natrol",
+        "stock": 110
+    },
+    {
+        "codigo": "NNeb2345",
+        "nombre": "Nebulizador portátil",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/nebulizador.jpg",
+        "precio": 120000,
+        "vencimiento": "2027-12-31",
+        "laboratorio": "Omron",
+        "stock": 25
+    },
+    {
+        "codigo": "OOxi6789",
+        "nombre": "Oxímetro de pulso",
+        "categoria": "Equipos Médicos",
+        "imagen": "img/oximetro.jpg",
+        "precio": 65000,
+        "vencimiento": "2027-05-15",
+        "laboratorio": "Beurer",
+        "stock": 40
+    },
+    {
+        "codigo": "PPro3456",
+        "nombre": "Probiótico intestinal",
+        "categoria": "Suplemento",
+        "imagen": "img/probiotico.jpg",
+        "precio": 28000,
+        "vencimiento": "2026-03-31",
+        "laboratorio": "Align",
+        "stock": 90
+    },
+    {
+        "codigo": "QQue7890",
+        "nombre": "Quercetina con vitamina C",
+        "categoria": "Suplemento",
+        "imagen": "img/quercetina.jpg",
+        "precio": 35000,
+        "vencimiento": "2026-06-15",
+        "laboratorio": "Now Foods",
+        "stock": 70
+    },
+    {
+        "codigo": "RRes1234",
+        "nombre": "Resveratrol 500mg",
+        "categoria": "Suplemento",
+        "imagen": "img/resveratrol.jpg",
+        "precio": 42000,
+        "vencimiento": "2026-09-30",
+        "laboratorio": "Pure Encapsulations",
+        "stock": 60
+    },
+    {
+        "codigo": "SSen5678",
+        "nombre": "Sensodyne pasta dental",
+        "categoria": "Higiene Bucal",
+        "imagen": "img/sensodyne.jpg",
+        "precio": 16500,
+        "vencimiento": "2025-12-20",
+        "laboratorio": "Sensodyne",
+        "stock": 180
+    },
+    {
+        "codigo": "TTin9101",
+        "nombre": "Tintura de yodo",
+        "categoria": "Primeros Auxilios",
+        "imagen": "img/tinturaYodo.jpg",
+        "precio": 9500,
+        "vencimiento": "2026-05-31",
+        "laboratorio": "Pervinox",
+        "stock": 85
+    },
+    {
+        "codigo": "UUlt2345",
+        "nombre": "Ultra levura probiótico",
+        "categoria": "Suplemento",
+        "imagen": "img/ultralevura.jpg",
+        "precio": 32000,
+        "vencimiento": "2026-04-15",
+        "laboratorio": "Biocodex",
+        "stock": 75
+    },
+    {
+        "codigo": "VVit6789",
+        "nombre": "Vitamina B12 sublingual",
+        "categoria": "Suplemento",
+        "imagen": "img/vitaminaB12.jpg",
+        "precio": 28000,
+        "vencimiento": "2026-07-20",
+        "laboratorio": "Nature Made",
+        "stock": 95
+    },
+    {
+        "codigo": "WWel3456",
+        "nombre": "Wellness pack multivitamínico",
+        "categoria": "Suplemento",
+        "imagen": "img/wellnessPack.jpg",
+        "precio": 55000,
+        "vencimiento": "2026-08-31",
+        "laboratorio": "GNC",
+        "stock": 60
+    },
+    {
+        "codigo": "XXan7890",
+        "nombre": "Xanax 0.5mg",
+        "categoria": "Medicamento",
+        "imagen": "img/xanax.jpg",
+        "precio": 45000,
+        "vencimiento": "2025-11-30",
+        "laboratorio": "Pfizer",
+        "stock": 40
+    },
+    {
+        "codigo": "YYog1234",
+        "nombre": "Yogurt probiótico en cápsulas",
+        "categoria": "Suplemento",
+        "imagen": "img/yogurtProbiotico.jpg",
+        "precio": 38000,
+        "vencimiento": "2026-03-15",
+        "laboratorio": "Culturelle",
+        "stock": 70
+    },
+    {
+        "codigo": "ZZin5678",
+        "nombre": "Zinc 50mg",
+        "categoria": "Suplemento",
+        "imagen": "img/zinc.jpg",
+        "precio": 22000,
+        "vencimiento": "2026-06-30",
+        "laboratorio": "Solaray",
+        "stock": 85
+    }
+];
+
+        // Guardar en localStorage
+        localStorage.setItem('productos', JSON.stringify(productosIniciales));
+        localStorage.setItem('productosInicializados', 'true');
+    }
+
+    // Cargar productos (iniciales o modificados)
+    productos = JSON.parse(localStorage.getItem('productos'));
+}
+
+// Luego en tu evento DOMContentLoaded:
+document.addEventListener('DOMContentLoaded', function () {
+    inicializarProductos();
+
+    if (window.location.pathname.endsWith('productos.html')) {
+        mostrarProductos();
+    } else if (window.location.pathname.endsWith('buscador.html')) {
+        mostrarResultados(productos);
+    }
+});
 
 // ==============================================
 // 3. EVENT LISTENERS (Formularios y Botones)
@@ -77,24 +623,25 @@ document.getElementById('formRegistro')?.addEventListener('submit', function (e)
 
     const codigo = document.getElementById('codigo').value;
 
-    // Validación del código (ejemplo: 3 letras + 4 números)
-    if (!/^(?=(?:.*\d){2,})(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(codigo)) {
-        alert("Código inválido. Debe tener mínimo 8 caracteres, al menos una letra minúscula, una mayúscula y dos números.");
+    // Validación del código
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(codigo)) {
+        alert("Código inválido. Debe tener mínimo 8 caracteres, al menos una letra minúscula, una mayúscula y un número.");
         window.location.href = "index.html#codigo-invalido";
         return;
     }
 
-    // Formatear el precio con puntos de miles
-    const precioInput = document.getElementById('precio').value;
-    const precioFormateado = parseFloat(precioInput).toLocaleString('es-CO');
+    // Verificar si el código ya existe
+    if (productos.some(p => p.codigo === codigo)) {
+        alert("Este código de producto ya está registrado.");
+        return;
+    }
 
-    // Resto del código para crear el producto...
     const nuevoProducto = {
         codigo: codigo,
         nombre: document.getElementById('nombre').value,
         categoria: document.getElementById('categoria').value,
         imagen: document.getElementById('imagen').value || 'img/default.png',
-        precio: precioFormateado,
+        precio: parseFloat(document.getElementById('precio').value),
         laboratorio: document.getElementById('laboratorio').value,
         stock: parseInt(document.getElementById('stock').value) || 0,
         vencimiento: document.getElementById('vencimiento').value
@@ -113,10 +660,14 @@ document.getElementById('btnBuscar')?.addEventListener('click', function () {
     const precioMax = parseFloat(document.getElementById('precioMax').value);
 
     const resultados = productos.filter(producto => {
+        const precio = typeof producto.precio === 'string' ?
+            parseFloat(producto.precio.replace(/[^0-9.-]+/g, "")) :
+            producto.precio;
+
         return (
             (nombre === '' || producto.nombre.toLowerCase().includes(nombre)) &&
             (categoria === '' || producto.categoria === categoria) &&
-            (isNaN(precioMax) || producto.precio <= precioMax)
+            (isNaN(precioMax) || precio <= precioMax)
         );
     });
 
@@ -141,234 +692,6 @@ document.getElementById('prevPage')?.addEventListener('click', () => {
     const paginaActual = parseInt(document.getElementById('currentPage').textContent.split(' ')[1]);
     if (paginaActual > 1) mostrarProductos(paginaActual - 1);
 });
-
-// ==============================================
-// 4. INICIALIZACIÓN (Cargar datos al abrir la página)
-// ==============================================
-
-function inicializarProductos() {
-    // Verificar si ya existen productos en localStorage
-    if (!localStorage.getItem('productos')) {
-        const productosIniciales = [
-            {
-                "codigo": "ABcd1234",
-                "nombre": "Crema Lubriderm",
-                "categoria": "Cuidado Personal",
-                "imagen": "img/cremaLubriderm.jpg",
-                "precio": 25000,
-                "vencimiento": "2025-06-15",
-                "laboratorio": "Lubriderm",
-                "stock": 100
-            },
-            {
-                "codigo": "XYef5678",
-                "nombre": "Crema Lubriderm",
-                "categoria": "Cuidado Personal",
-                "imagen": "img/cremaLubriderm.jpg",
-                "precio": 26000,
-                "vencimiento": "2025-12-20",
-                "laboratorio": "Lubriderm",
-                "stock": 120
-            },
-            {
-                "codigo": "GHij9101",
-                "nombre": "Crema Dental",
-                "categoria": "Higiene Bucal",
-                "imagen": "img/cremaDental.jpg",
-                "precio": 8000,
-                "vencimiento": "2024-08-10",
-                "laboratorio": "Colgate",
-                "stock": 300
-            },
-            {
-                "codigo": "KLmn2345",
-                "nombre": "Crema Dental",
-                "categoria": "Higiene Bucal",
-                "imagen": "img/cremaDental.jpg",
-                "precio": 8500,
-                "vencimiento": "2024-12-31",
-                "laboratorio": "Colgate",
-                "stock": 250
-            },
-            {
-                "codigo": "OPqr6789",
-                "nombre": "Jarabe para la Tos",
-                "categoria": "Medicamento",
-                "imagen": "img/jarabeParaLaTos.jpg",
-                "precio": 15000,
-                "vencimiento": "2025-03-15",
-                "laboratorio": "Vick",
-                "stock": 200
-            },
-            {
-                "codigo": "STuv3456",
-                "nombre": "Jarabe para la Tos",
-                "categoria": "Medicamento",
-                "imagen": "img/jarabeParaLaTos.jpg",
-                "precio": 16000,
-                "vencimiento": "2025-09-10",
-                "laboratorio": "Vick",
-                "stock": 180
-            },
-            {
-                "codigo": "WXyz7890",
-                "nombre": "Labial",
-                "categoria": "Cosmético",
-                "imagen": "img/labial.jpg",
-                "precio": 12000,
-                "vencimiento": "2026-01-01",
-                "laboratorio": "Maybelline",
-                "stock": 150
-            },
-            {
-                "codigo": "UVwx1234",
-                "nombre": "Labial",
-                "categoria": "Cosmético",
-                "imagen": "img/labial.jpg",
-                "precio": 13000,
-                "vencimiento": "2026-06-15",
-                "laboratorio": "Maybelline",
-                "stock": 140
-            },
-            {
-                "codigo": "YZab5678",
-                "nombre": "Losartan",
-                "categoria": "Medicamento",
-                "imagen": "img/losartan.jpg",
-                "precio": 12000,
-                "vencimiento": "2024-12-31",
-                "laboratorio": "MK",
-                "stock": 500
-            },
-            {
-                "codigo": "CDef9101",
-                "nombre": "Losartan",
-                "categoria": "Medicamento",
-                "imagen": "img/losartan.jpg",
-                "precio": 12500,
-                "vencimiento": "2025-06-30",
-                "laboratorio": "MK",
-                "stock": 450
-            },
-            {
-                "codigo": "DEfg1234",
-                "nombre": "Pañales",
-                "categoria": "Cuidado Infantil",
-                "imagen": "img/pañales.jpg",
-                "precio": 45000,
-                "vencimiento": "2025-12-15",
-                "laboratorio": "Huggies",
-                "stock": 300
-            },
-            {
-                "codigo": "HIjk5678",
-                "nombre": "Pañales",
-                "categoria": "Cuidado Infantil",
-                "imagen": "img/pañales.jpg",
-                "precio": 46000,
-                "vencimiento": "2026-03-20",
-                "laboratorio": "Huggies",
-                "stock": 280
-            },
-            {
-                "codigo": "LMno9101",
-                "nombre": "Preservativos",
-                "categoria": "Cuidado Sexual",
-                "imagen": "img/preservativos.jpg",
-                "precio": 15000,
-                "vencimiento": "2027-01-01",
-                "laboratorio": "Durex",
-                "stock": 400
-            },
-            {
-                "codigo": "PQrs2345",
-                "nombre": "Preservativos",
-                "categoria": "Cuidado Sexual",
-                "imagen": "img/preservativos.jpg",
-                "precio": 16000,
-                "vencimiento": "2027-06-15",
-                "laboratorio": "Durex",
-                "stock": 350
-            },
-            {
-                "codigo": "TUvw6789",
-                "nombre": "Shampoo",
-                "categoria": "Cuidado Personal",
-                "imagen": "img/shampoo.jpg",
-                "precio": 18000,
-                "vencimiento": "2025-09-05",
-                "laboratorio": "Head & Shoulders",
-                "stock": 200
-            },
-            {
-                "codigo": "XYza3456",
-                "nombre": "Shampoo",
-                "categoria": "Cuidado Personal",
-                "imagen": "img/shampoo.jpg",
-                "precio": 19000,
-                "vencimiento": "2026-01-10",
-                "laboratorio": "Head & Shoulders",
-                "stock": 180
-            },
-            {
-                "codigo": "BCde7890",
-                "nombre": "Termómetro",
-                "categoria": "Equipos Médicos",
-                "imagen": "img/termometro.jpg",
-                "precio": 40000,
-                "vencimiento": "2028-12-31",
-                "laboratorio": "Omron",
-                "stock": 50
-            },
-            {
-                "codigo": "FGhi1234",
-                "nombre": "Termómetro",
-                "categoria": "Equipos Médicos",
-                "imagen": "img/termometro.jpg",
-                "precio": 42000,
-                "vencimiento": "2029-06-30",
-                "laboratorio": "Omron",
-                "stock": 45
-            },
-            {
-                "codigo": "JKlm5678",
-                "nombre": "Vitamina C",
-                "categoria": "Suplemento",
-                "imagen": "img/vitaminaC.jpg",
-                "precio": 15000,
-                "vencimiento": "2026-01-10",
-                "laboratorio": "Bayer",
-                "stock": 300
-            },
-            {
-                "codigo": "NOpq9101",
-                "nombre": "Vitamina C",
-                "categoria": "Suplemento",
-                "imagen": "img/vitaminaC.jpg",
-                "precio": 16000,
-                "vencimiento": "2026-07-15",
-                "laboratorio": "Bayer",
-                "stock": 280
-            },
-            // ... Agregar más productos siguiendo la misma estructura ...
-        ];
-        // Guardar los productos iniciales en localStorage
-        localStorage.setItem('productos', JSON.stringify(productosIniciales));
-    }
-}
-
-// Inicializar productos y cargar datos al abrir la página
-document.addEventListener('DOMContentLoaded', () => {
-    inicializarProductos(); // Inicializar productos en localStorage si no existen
-    if (window.location.pathname.includes('productos.html')) {
-        mostrarProductos(); // Mostrar productos al cargar la página
-    }
-});
-
-// Cargar productos en buscador.html (opcional: mostrar todos al inicio)
-if (window.location.pathname.includes('buscador.html')) {
-    mostrarResultados(productos);
-}
 
 // ===== FUNCIONALIDAD DE ELIMINACIÓN =====
 document.addEventListener('click', function (e) {
@@ -418,14 +741,13 @@ function abrirModalEdicion() {
                     <option value="suplemento" ${productoEditando.categoria === 'suplemento' ? 'selected' : ''}>Suplemento</option>
                     <option value="Cuidado Personal" ${productoEditando.categoria === 'Cuidado Personal' ? 'selected' : ''}>Cuidado Personal</option>
                     <option value="Equipos Medicos Basicos" ${productoEditando.categoria === 'Equipos Medicos Basicos' ? 'selected' : ''}>Equipos Medicos Basicos</option>
-                    
                 </select>
                 
                 <label for="edit-imagen">Imagen (URL):</label>
                 <input type="text" id="edit-imagen" value="${productoEditando.imagen}">
                 
                 <label for="edit-precio">Precio:</label>
-                <input type="text" id="edit-precio" value="${productoEditando.precio}" required>
+                <input type="number" id="edit-precio" value="${productoEditando.precio}" required step="0.01">
                 
                 <label for="edit-laboratorio">Laboratorio:</label>
                 <input type="text" id="edit-laboratorio" value="${productoEditando.laboratorio}">
@@ -454,7 +776,7 @@ function abrirModalEdicion() {
         productoEditando.nombre = document.getElementById('edit-nombre').value;
         productoEditando.categoria = document.getElementById('edit-categoria').value;
         productoEditando.imagen = document.getElementById('edit-imagen').value;
-        productoEditando.precio = document.getElementById('edit-precio').value;
+        productoEditando.precio = parseFloat(document.getElementById('edit-precio').value);
         productoEditando.laboratorio = document.getElementById('edit-laboratorio').value;
         productoEditando.stock = parseInt(document.getElementById('edit-stock').value) || 0;
         productoEditando.vencimiento = document.getElementById('edit-vencimiento').value;
@@ -476,3 +798,18 @@ function abrirModalEdicion() {
         }
     });
 }
+
+// ==============================================
+// 4. INICIALIZACIÓN (Cargar datos al abrir la página)
+// ==============================================
+document.addEventListener('DOMContentLoaded', function () {
+    // Primero inicializar los productos
+    inicializarProductos();
+
+    // Luego cargar la vista correspondiente
+    if (window.location.pathname.endsWith('productos.html')) {
+        mostrarProductos();
+    } else if (window.location.pathname.endsWith('buscador.html')) {
+        mostrarResultados(productos);
+    }
+});

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador | Droguería SaludPlus</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <nav class="navbar">
         <img src="img/ChatGPT Image 23 abr 2025, 14_07_42.png" alt="Drogueria SaludPlus">
@@ -16,19 +18,19 @@
     </nav>
     <div class="container">
         <h1>Buscador de Productos</h1>
-        
+
         <div class="filtros">
             <input type="text" id="buscarNombre" placeholder="Nombre del producto">
             <select id="filtroCategoria">
                 <option value="">Todas las categorías</option>
                 <option value="medicamento">Medicamento</option>
                 <option value="cosmetico">Cosmético</option>
-                <option value="cosmetico">Suplemento</option>
-                <option value="cosmetico">Cuidado Personal</option>
-                <option value="cosmetico">Equipos Medicos Basicos</option>
+                <option value="suplemento">Suplemento</option>
+                <option value="Cuidado Personal">Cuidado Personal</option>
+                <option value="Equipos Medicos Basicos">Equipos Medicos Basicos</option>
             </select>
             <input type="number" id="precioMax" placeholder="Precio máximo">
-            
+
             <div class="buttons">
                 <button id="btnBuscar" class="btn-primary">Buscar</button>
                 <button id="btnLimpiar" class="btn-secondary">Limpiar</button>
@@ -41,7 +43,8 @@
     <footer>
         <p>© 2025 Droguería SaludPlus. Todos los derechos reservados.</p>
     </footer>
-    
+
     <script src="js/productos.js"></script>
 </body>
+
 </html>
