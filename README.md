@@ -37,17 +37,7 @@ ProyectoFinal/
 ├── css/
 │   └── styles.css
 ├── img/
-│   ├── cremaLubriderm.jpg
-│   ├── cremaDental.jpg
-│   ├── jarabeParaLaTos.jpg
-│   ├── labial.jpg
-│   ├── losartan.jpg
-│   ├── pañales.jpg
-│   ├── preservativos.jpg
-│   ├── shampoo.jpg
-│   ├── termometro.jpg
-│   ├── vitaminaC.jpg
-│   └── default.png
+│   └── rutas de todas las imagenes .jpg
 ├── js/
 │   └── productos.js
 ├── index.html

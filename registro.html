@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Productos | Droguería SaludPlus</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <nav class="navbar">
         <img src="img/ChatGPT Image 23 abr 2025, 14_07_42.png" alt="Drogueria SaludPlus">
@@ -17,33 +19,23 @@
     <div class="container">
         <h1>Registro de Productos</h1>
         <p>Complete el formulario para agregar un nuevo producto al inventario.</p>
-        
+
         <form id="formRegistro">
             <label for="nombre">Nombre del Producto:</label>
             <input type="text" id="nombre" required>
 
             <label for="categoria">Categoría:</label>
             <select id="categoria" required>
-                <option value="medicamento">Medicamento</option>
-                <option value="cosmetico">Cosmético</option>
-                <option value="suplemento">Suplemento</option>
+                <option value="Medicamento">Medicamento</option>
                 <option value="Cuidado Personal">Cuidado Personal</option>
-                <option value="Equipos Medicos Basicos">Equipos Medicos Basicos</option>
+                <option value="Higiene Bucal">Higiene Bucal</option>
+                <option value="Suplemento">Suplemento</option>
+                <option value="Primeros Auxilios">Primeros Auxilios</option>
+                <option value="Equipos Médicos">Equipos Médicos</option>
             </select>
 
-            <label for="imagen">Imagen:</label>
-            <select id="imagen" required>
-                <option value="img/cremaLubriderm.jpg">Crema para el cuerpo</option>
-                <option value="img/cremaDental.jpg">Crema Dental</option>
-                <option value="img/jarabeParaLaTos.jpg">Jarabe para la Tos</option>
-                <option value="img/labial.jpg">Labial</option>
-                <option value="img/losartan.jpg">medicamentos antihipertensivos</option>
-                <option value="img/pañales.jpg">Pañales</option>
-                <option value="img/preservativos.jpg">Preservativos</option>
-                <option value="img/shampoo.jpg">Shampoo</option>
-                <option value="img/termometro.jpg">Termómetro</option>
-                <option value="img/vitaminaC.jpg">Vitamina C</option>
-            </select>
+            <label for="imagen">Imagen (ruta):</label>
+            <input type="text" id="imagen" required placeholder="Ej: img/cremaLubriderm.jpg">
 
             <label for="codigo">Código de Producto:</label>
             <input type="text" id="codigo" required>
@@ -70,7 +62,8 @@
     <footer>
         <p>© 2025 Droguería SaludPlus. Todos los derechos reservados.</p>
     </footer>
-    
+
     <script src="js/productos.js"></script>
 </body>
+
 </html>
